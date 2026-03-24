@@ -3264,7 +3264,7 @@ const device_chipset = {
                     continue;
 
                 const vtable = this.read64(scriptExecutionContext);
-                //print(`vtable: ${vtable.noPAC()}`);
+                print(`vtable: ${vtable.noPAC()}`);
                 if (vtable.noPAC() != offsets.WebCore__DedicatedWorkerGlobalScope_vtable)
                     continue;
 
